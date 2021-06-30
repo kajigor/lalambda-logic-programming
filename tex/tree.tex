@@ -1,0 +1,76 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+\tikzset{
+  >={Latex[width=2mm,length=2mm]},
+  base/.style = {rectangle, rounded corners, draw=black,
+                  minimum width=1cm, minimum height=1cm,
+                  text centered, font=\sffamily},
+  male/.style = {base, fill=blue!30},
+  female/.style = {base, fill=red!30},
+  dad/.style = {male, xshift=1cm},
+  mom/.style = {female, xshift=-1cm},
+}
+\begin{document}
+\begin{tikzpicture}[node distance=2.5cm,
+    every node/.style={fill=white, font=\sffamily}, align=center]
+  \node (me) [base] {me};
+  \node (s) [female, left of=me, xshift=1cm] {s};
+  \node (b) [male, right of=me, xshift=-1cm] {b};
+  \node (d) [dad, above of=me, xshift=3cm] {d};
+  \node (m) [mom, above of=me, xshift=-3cm] {m};
+  \node (bm) [male, right of=m, xshift=0.25cm] {bm};
+  \node (sm) [female, left of=m, xshift=1cm ] {sm};
+  \node (dd) [dad, above of=d, xshift=1cm] {dd};
+
+  \node (md) [mom, above of=d, xshift=-1cm] {md};
+  \node (bmd) [male, right of=md, xshift=-1cm] {bmd};
+
+  \node (dm) [dad, above of=m, xshift=1cm] {dm};
+  \node (wdm) [female, right of=dm, xshift=-1cm] {wdm};
+  \node (mm) [mom, above of=m, xshift=-1cm] {mm};
+  \node (ddd) [dad, above of=dd] {ddd};
+  \node (mdd) [mom, above of=dd] {mdd};
+  \node (dmd) [dad, above of=md] {dmd};
+  \node (mmd) [mom, above of=md] {mmd};
+  \node (ddm) [dad, above of=dm] {ddm};
+  \node (mdm) [mom, above of=dm] {mdm};
+  \node (dmm) [dad, above of=mm] {dmm};
+  \node (mmm) [mom, above of=mm] {mmm};
+
+
+  \draw (me.north) -- ++(0,0.75) -| (d);
+  \draw (me.north) -- ++(0,0.75) -| (m);
+  \draw (b.north) -- ++(0,0.75) -| (d);
+  \draw (b.north) -- ++(0,0.75) -| (m);
+  \draw (s.north) -- ++(0,0.75) -| (d);
+  \draw (s.north) -- ++(0,0.75) -| (m);
+
+  \draw (m.north) -- ++(0,0.75) -| ($(dm.south)-(0.1,0)$);
+  \draw (m.north) -- ++(0,0.75) -| (mm);
+
+  \draw (sm.north) -- ++(0,0.75) -| ($(dm.south)-(0.1,0)$);
+  \draw (sm.north) -- ++(0,0.75) -| (mm);
+
+  \draw (bm.north) -- ++(0,0.75) -| ($(dm.south)+(0.1,0)$);
+  \draw (bm.north) -- ++(0,0.75) -| (wdm);
+
+  \draw (d.north) -- ++(0,0.75) -| (dd);
+  \draw (d.north) -- ++(0,0.75) -| (md);
+
+  \draw (dd.north) -- ++(0,0.75) -| (ddd);
+  \draw (dd.north) -- ++(0,0.75) -| (mdd);
+
+  \draw (md.north) -- ++(0,0.75) -| (dmd);
+  \draw (md.north) -- ++(0,0.75) -| (mmd);
+
+  \draw (bmd.north) -- ++(0,0.75) -| (dmd);
+  \draw (bmd.north) -- ++(0,0.75) -| (mmd);
+
+  \draw (dm.north) -- ++(0,0.75) -| (ddm);
+  \draw (dm.north) -- ++(0,0.75) -| (mdm);
+
+  \draw (mm.north) -- ++(0,0.75) -| (dmm);
+  \draw (mm.north) -- ++(0,0.75) -| (mmm);
+  \end{tikzpicture}
+\end{document}
