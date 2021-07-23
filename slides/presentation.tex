@@ -22,6 +22,7 @@
 \usepackage{verbatim}
 \usepackage{ulem}
 \usepackage{proof}
+\usepackage{mathpartir}
 
 \beamertemplatenavigationsymbolsempty
 
@@ -126,25 +127,160 @@ initial text={}
 
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Как это работает: унификация}
 
-% \begin{frame}[fragile]
-%   \frametitle{Как это работает: дизъюнкты Хорна}
+\[
+  \mathcal{T} = \mathcal{V} \mid \mathcal{C}^n (t_1, \dots, t_n)
+\]
 
-%   \begin{align*}
-%     G &::= \top \mid A \mid G \wedge G \mid G \vee G \mid \exists_{\tau} x. G \\
-%     D &::= A \mid G \to D \mid D \wedge D \mid \forall_{\tau} x. D
-%   \end{align*}
+\begin{center}
+  Даны два терма $t, s$
+\end{center}
 
-%   \vspace{1cm}
+\begin{center}
+  Задача: найти подстановку на свободных переменных термов (унификатор) $\theta$, такую что
+\end{center}
 
-%   \begin{itemize}
-%     \item $\top$ --- истина
-%     \item $A$ --- атом
-%     \item $G$ --- цель
-%     \item $D$ --- дизъюнкт Хорна (правило логического вывода)
-%   \end{itemize}
-% \end{frame}
+\[
+  t \theta = s \theta
+\]
 
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Унификаторы: примеры}
+\[
+  \begin{array}{r | l}
+    X \equiv Y & \langle X \mapsto Y \rangle \\
+    X \equiv Y & \langle Y \mapsto X \rangle \\
+    X \equiv X & \langle \rangle \\
+    & \\
+    a \equiv b & failure \\
+    a(X, b) \equiv a(c, Y) & \langle X \mapsto c, Y \mapsto b \rangle \\
+    a(X, b) \equiv a(c, X) & failure \\
+    & \\
+    a(X, b(Y)) \equiv a(b(Z), b(W)) & \langle X \mapsto b(Z), Y \mapsto W \rangle \\
+    a(X, b(Y)) \equiv a(b(Z), c(W)) & failure \\
+    a(X, b(X), X) \equiv a(b(Y), b(b(Z)), Z) & failure
+  \end{array}
+\]
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Как это работает: дизъюнкты Хорна}
+\textit{Дизъюнкт Хорна} --- дизъюнктивный одночлен с не более чем одним положительным литералом
+\begin{center}
+  a.k.a.
+\end{center}
+\[
+  \neg p \vee \neg q \vee \dots \vee \neg t \vee u
+\]
+\begin{center}
+  a.k.a.
+\end{center}
+\[
+  (p \wedge q \wedge \dots \wedge t) \to u
+\]
+\begin{center}
+  a.k.a.
+\end{center}
+\begin{center}
+  \begin{minipage}{0.35\textwidth}
+    \begin{verbatim}
+  u :- p, q, ..., t.
+    \end{verbatim}
+  \end{minipage}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Как это работает: правило резолюций}
+\[\inferrule{p \vee a, \ \neg p \vee b}{a \vee b}\]
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Правило резолюций: пробуем опровергнуть}
+  \[\inferrule{p \vee a, \ \neg p \vee b}{a \vee b}\]
+
+\[
+  (p \vee a) \wedge (\neg p \vee b) \to a \vee b
+\]
+\begin{center}
+Надо, чтобы:
+\end{center}
+\[
+  (p \vee a) \wedge (\neg p \vee b) \equiv true
+\]
+\[
+  a \vee b \equiv false
+\]
+
+
+\begin{center}
+  Если $p \equiv true$, $b$ должна быть $true$
+
+  Если $p \equiv false$, $a$ должна быть $true$
+
+  В этих случаях $a \vee b \equiv true$
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Правило резолюции: modus ponens на стероидах}
+  \[\inferrule{p, \ p \to b}{b}\]
+
+  \[\inferrule{p, \ \neg p \vee b}{b}\]
+
+  \[\inferrule{p \vee a, \ \neg p \vee b}{a \vee b}\]
+
+  \[\inferrule{p \vee a_1 \vee a_2 \vee \dots \vee a_k, \ \neg p \vee b_1 \vee b_2 \vee \dots \vee b_l}{a_1 \vee a_2 \vee \dots \vee a_k \vee b_1 \vee b_2 \vee \dots \vee b_l}\]
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Метод резолюций обобщает доказательство от противного}
+Чтобы доказать, что утверждение следует из заданного набора аксиом, добавляем его с отрицанием, пользуемся методом резолюций.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Пример использования метода резолюций}
+Все люди --- смертны. Я --- человек. Я смертен?
+
+\begin{verbatim}
+mortal(X) :- human(X).
+human(me).
+?- mortal(me).
+\end{verbatim}
+
+\[
+  \begin{array}{c}
+    \neg human(X) \vee mortal(X) \\
+    human(me) \\
+    \neg mortal(me)
+  \end{array}
+\]
+
+При подстановке $\langle X \mapsto me \rangle$
+
+\[
+  \begin{array}{c}
+    \neg human(me) \vee mortal(me) \\
+    human(me) \\
+    \neg mortal(me)
+  \end{array}
+\]
+
+\[
+  \begin{array}{c}
+    mortal(me) \\
+    \neg mortal(me)
+  \end{array}
+\]
+
+\end{frame}
 
 % \begin{frame}[fragile]
 %   \frametitle{Как это работает: логический вывод (backchaining)}

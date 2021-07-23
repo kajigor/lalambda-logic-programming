@@ -8,3 +8,12 @@
 *.synctex.gz
 
 *.aux
+slides/presentation.toc
+
+slides/presentation.snm
+
+slides/presentation.out
+
+slides/presentation.nav
+
+slides/presentation.vrb
