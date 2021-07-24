@@ -69,6 +69,17 @@ initial text={}
   \end{frame}
 }
 
+\begin{frame}[fragile]
+  \frametitle{Материалы}
+\begin{center}
+\url{https://bit.ly/3iDsxtA}
+
+\vspace{1cm}
+
+\includegraphics[width=0.4\textwidth]{pics/links.png}
+\end{center}
+\end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Логическое программирование}
@@ -241,8 +252,29 @@ initial text={}
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Обобщаем правило резолюции}
+  \[\inferrule{p_1 \vee a, \ \neg p_2 \vee b}{(a \vee b)\theta}{p_1 \equiv p_2 \theta}\]
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Метод резолюций обобщает доказательство от противного}
-Чтобы доказать, что утверждение следует из заданного набора аксиом, добавляем его с отрицанием, пользуемся методом резолюций.
+
+  \begin{center}
+    Имеем набор фактов и предикатов, хотим проверить, верна ли некоторая цель
+  \end{center}
+
+  \begin{center}
+    Добавляем отрицание цели к имеющимся предикатам
+  \end{center}
+
+  \begin{center}
+    Ищем контрарные литералы, удаляем их
+  \end{center}
+
+  \begin{center}
+    Если в конце осталось пустое множество атомов, значит, цель выполнима
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
