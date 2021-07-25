@@ -113,6 +113,11 @@ initial text={}
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Задача}
+Реализовать предикат, проверяющий, что один человек -- внучатый племянник другого.
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{Логическое программирование: пример}
 \[
   \forall h x y z. (append \ [] \ y \ y \vee (append \ x \ y \ z \to append \ (h :: x) \  y \ (h :: z)))
@@ -135,77 +140,30 @@ initial text={}
   ?- palindrom([X, Y, X]).
   true
 \end{verbatim}
-
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Как это работает: унификация}
+  \frametitle{Задача}
+Реализовать предикат \verb!zip!.
 
-\[
-  \mathcal{T} = \mathcal{V} \mid \mathcal{C}^n (t_1, \dots, t_n)
-\]
+\begin{verbatim}
+  zip(Xs, Ys, Zs) :- ...
 
-\begin{center}
-  Даны два терма $t, s$
-\end{center}
+  ?- zip([1,2], [3,4], [(1,3), (2,4)]).
+  true
 
-\begin{center}
-  Задача: найти подстановку на свободных переменных термов (унификатор) $\theta$, такую что
-\end{center}
+  ?- zip([1,2], [3,4], X).
+  X = [(1, 3), (2, 4)].
 
-\[
-  t \theta = s \theta
-\]
+  ?- zip(X, Y, [(1,2), (3,4)]).
+  X = [1, 3],
+  Y = [2, 4].
 
+  ?- zip([], [1], X).
+  false.
+\end{verbatim}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Унификаторы: примеры}
-\[
-  \begin{array}{r | l}
-    X \equiv Y & \langle X \mapsto Y \rangle \\
-    X \equiv Y & \langle Y \mapsto X \rangle \\
-    X \equiv X & \langle \rangle \\
-    & \\
-    a \equiv b & failure \\
-    a(X, b) \equiv a(c, Y) & \langle X \mapsto c, Y \mapsto b \rangle \\
-    a(X, b) \equiv a(c, X) & failure \\
-    & \\
-    a(X, b(Y)) \equiv a(b(Z), b(W)) & \langle X \mapsto b(Z), Y \mapsto W \rangle \\
-    a(X, b(Y)) \equiv a(b(Z), c(W)) & failure \\
-    a(X, b(X), X) \equiv a(b(Y), b(b(Z)), Z) & failure
-  \end{array}
-\]
-
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Как это работает: дизъюнкты Хорна}
-\textit{Дизъюнкт Хорна} --- дизъюнктивный одночлен с не более чем одним положительным литералом
-\begin{center}
-  a.k.a.
-\end{center}
-\[
-  \neg p \vee \neg q \vee \dots \vee \neg t \vee u
-\]
-\begin{center}
-  a.k.a.
-\end{center}
-\[
-  (p \wedge q \wedge \dots \wedge t) \to u
-\]
-\begin{center}
-  a.k.a.
-\end{center}
-\begin{center}
-  \begin{minipage}{0.35\textwidth}
-    \begin{verbatim}
-  u :- p, q, ..., t.
-    \end{verbatim}
-  \end{minipage}
-\end{center}
-
-\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Как это работает: правило резолюций}
@@ -252,12 +210,6 @@ initial text={}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Обобщаем правило резолюции}
-  \[\inferrule{p_1 \vee a, \ \neg p_2 \vee b}{(a \vee b)\theta}{p_1 \equiv p_2 \theta}\]
-\end{frame}
-
-
-\begin{frame}[fragile]
   \frametitle{Метод резолюций обобщает доказательство от противного}
 
   \begin{center}
@@ -275,6 +227,108 @@ initial text={}
   \begin{center}
     Если в конце осталось пустое множество атомов, значит, цель выполнима
   \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Как это работает: унификация}
+
+\[
+  \mathcal{T} = \mathcal{V} \mid \mathcal{C}^n (t_1, \dots, t_n)
+\]
+
+\begin{center}
+  Даны два терма $t, s$
+\end{center}
+
+\begin{center}
+  Задача: найти подстановку на свободных переменных термов (унификатор) $\theta$, такую что
+\end{center}
+
+\[
+  t \theta = s \theta
+\]
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Унификаторы: примеры}
+\[
+  \begin{array}{r | l}
+    X \equiv Y & \langle X \mapsto Y \rangle \\
+    X \equiv Y & \langle Y \mapsto X \rangle \\
+    X \equiv X & \langle \rangle \\
+    & \\
+    a \equiv b & failure \\
+    a(X, b) \equiv a(c, Y) & \langle X \mapsto c, Y \mapsto b \rangle \\
+    a(X, b) \equiv a(c, X) & failure \\
+    & \\
+    a(X, b(Y)) \equiv a(b(Z), b(W)) & \langle X \mapsto b(Z), Y \mapsto W \rangle \\
+    a(X, b(Y)) \equiv a(b(Z), c(W)) & failure \\
+    a(X, b(X), X) \equiv a(b(Y), b(b(Z)), Z) & failure
+  \end{array}
+\]
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Обобщаем правило резолюции}
+  \[\inferrule{p_1 \vee a, \ \neg p_2 \vee b}{(a \vee b)\theta}{p_1 \equiv p_2 \theta}\]
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Как это работает: дизъюнкты Хорна}
+\textit{Дизъюнкт Хорна} --- дизъюнктивный одночлен с не более чем одним положительным литералом
+\begin{center}
+  a.k.a.
+\end{center}
+\[
+  \neg p \vee \neg q \vee \dots \vee \neg t \vee u
+\]
+\begin{center}
+  a.k.a.
+\end{center}
+\[
+  (p \wedge q \wedge \dots \wedge t) \to u
+\]
+\begin{center}
+  a.k.a.
+\end{center}
+\begin{center}
+  \begin{minipage}{0.35\textwidth}
+    \begin{verbatim}
+  u :- p, q, ..., t.
+    \end{verbatim}
+  \end{minipage}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{SLD-резолюция}
+\begin{center}
+  Имеем цель с выделенным атомом $L_i$:
+\end{center}
+\[
+  \neg L_1 \vee \dots \vee \neg L_i \vee \dots \vee \neg L_n
+\]
+\begin{center}
+  Находим определение, чья голова унифицируема с $L_i$:
+\end{center}
+\[
+  \neg K_1 \vee \dots \vee \neg K_m \vee L
+\]
+\begin{center}
+  По правилу резолюции получаем резольвенту:
+\end{center}
+\[
+  \neg L_1 \vee \dots \vee \neg K_1 \vee \dots \vee  \neg K_m \vee \dots \vee \neg L_n
+\]
+
+\begin{center}
+  Продолжаем, пока цель не станет пустой
+\end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -313,6 +367,39 @@ human(me).
 \]
 
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{SLD-резолюция: особенности}
+  \begin{itemize}
+    \item Поиск в глубину
+    \item Порядок дизъюнкций важен
+    \item Порядок конъюнкций важен
+    \item Поиск не полон
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{На что посмотреть дальше}
+  \begin{itemize}
+    \item Реляционное программирование: miniKanren
+    \begin{itemize}
+      \item Поиск полон
+      \item Легковесный, встраиваемый язык
+      \item \url{http://minikanren.org/}
+    \end{itemize}
+    \item Logica: язык запросов от Google, основанный на Datalog
+    \begin{itemize}
+      \item \url{https://opensource.googleblog.com/2021/04/logica-organizing-your-data-queries.html}
+    \end{itemize}
+    \item Функционально-логический язык mercury
+    \begin{itemize}
+      \item \url{https://mercurylang.org/}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+
 
 % \begin{frame}[fragile]
 %   \frametitle{Как это работает: логический вывод (backchaining)}
